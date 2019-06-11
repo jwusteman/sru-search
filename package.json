@@ -3,6 +3,10 @@
   "description": "A material design element for searching using the SRU standard",
   "license": "Apache-2.0",
   "main": "sru-search.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jwusteman/sru-search.git"
+  },
   "scripts": {
     "run": "polymer serve",
     "proxycat": "node node_modules/local-cors-proxy/bin/lcp.js --proxyUrl http://lx2.loc.gov:210",
@@ -30,6 +34,9 @@
   "devDependencies": {
     "@polymer/iron-demo-helpers": "^3.0.0-pre.19",
     "@webcomponents/webcomponentsjs": "^2.0.0",
+    "growl": ">=1.10.0",
+    "lodash": ">=4.17.11",
+    "debug": ">=2.6.9",
     "wct-browser-legacy": "^1.0.0"
   }
 }
