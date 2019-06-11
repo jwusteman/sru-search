@@ -1,0 +1,187 @@
+<!doctype html>
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../paper-item/paper-item-body.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../paper-search/paper-search-panel.html">
+<link rel="import" href="../vaadin-grid/vaadin-grid.html">
+
+<!--
+Bar in which the user can enter search terms and filter
+
+@demo demo/paper-search-bar.html
+-->
+<dom-module id="sru-search">
+    <template>
+<style>
+:host,.items {
+    @apply --layout-vertical;
+}
+
+.panel {
+    position: relative;
+    margin: .5em;
+    box-sizing: border-box;
+}
+
+.panel:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+@media only screen and (min-width: 40.5em) {
+    .paperSearchPanel {
+         margin-right: 230px;
+    }
+
+    .logo {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 220px;
+        float: right;
+    }
+}
+</style>
+<div class="panel">
+    <paper-search-panel class="paperSearchPanel" placeholder="[[placeholder]]"
+            hide-filter-button="[[hideFilterButton]]"
+		search="{{search}}"
+		count="{{count}}"
+		items="[[_createItems(noResults)]]"
+		has-more="[[hasMore]]"
+		loading="[[loading]]"
+		filters="[[filters]]"
+		selected-filters="{{selectedFilters}}"
+                on-paper-search-search="[[search]]">
+					<div>
+<vaadin-grid aria-label="Basic Binding Example" items="[[items]]">
+
+      <vaadin-grid-column width="60px" flex-grow="0">
+        <template class="header">#</template>
+        <template>[[index]]</template>
+        <!-- If necessary, the footer could be set using <template class="footer"> -->
+        <template class="footer">#</template>
+      </vaadin-grid-column>
+
+      <vaadin-grid-column>
+        <template class="header">Heading</template>
+        <template>[[item.heading]]</template>
+        <template class="footer">Heading</template>
+      </vaadin-grid-column>
+
+      <vaadin-grid-column>
+        <template class="header">Type</template>
+        <template>[[item.type]]</template>
+        <template class="footer">Type</template>
+      </vaadin-grid-column>
+
+      <vaadin-grid-column width="8em">
+        <template class="header">Title</template>
+        <template>
+          <div style="white-space: normal">[[item.title]]</div>
+        </template>
+        <template class="footer">Title</template>
+      </vaadin-grid-column>
+
+    </vaadin-grid>
+					</div>
+    <div>[[nummatches]] results for "[[search]]"</div>        
+					<div fixed>
+    
+					</div>
+    </paper-search-panel>
+    <div class="logo"><slot name="logo"></slot></div>
+</div>
+    </template>
+</dom-module>
+<script>
+  // Define the class for a new element called custom-element
+  class SRUSearch extends Polymer.Element {
+    static get is() { return "sru-search"; }
+    constructor() {
+        super();
+    }
+    
+    static get properties() {
+        return {
+          placeholder: {
+            type: String,
+            value: "Search..."
+          },
+          search: {
+            type: String,
+            value: ""
+          },
+          endpoint: {
+            type: String,
+            value: "http://viaf.org/viaf/search"
+          },
+          recordschema:{
+            type: String,
+            value: "BriefVIAF"
+          },
+          nummatches: {
+            type: Number,
+            notify: true,
+            value: 0
+          },
+      };
+    }
+   
+    doSearch () {
+        this.loading = true;
+        var rqHeaders = new Headers();
+        var searchPanel = this.shadowRoot.querySelector("paper-search-panel")
+        var query = searchPanel.search;
+
+        var myInit = { method: 'GET',
+               headers: rqHeaders,
+               mode: 'cors',
+               cache: 'default' };
+        var sruQuery = new URL(this.endpoint),
+            params = {query: 'cql.any all "' + query + '"', sortKeys: "holdingscount", recordSchema: this.recordschema}
+        Object.keys(params).forEach(key => sruQuery.searchParams.append(key, params[key]))
+//?query=cql.any+%3D+"judith"&recordSchema=http%3A%2F%2Fviaf.org%2FVIAFCluster&maximumRecords=100&startRecord=1&resultSetTTL=300&recordPacking=xml&recordXPath=&sortKeys=
+        fetch(sruQuery, myInit).then(this.searchResponse.bind(this)).then(this.searchBody.bind(this));
+    };
+    
+    ready () {
+        super.ready();
+        var searchPanel = this.shadowRoot.querySelector("paper-search-panel");
+        this.addEventListener('search', e => { this.doSearch(e)});
+    }
+
+    searchResponse (response) {
+	this.loading = false;
+        return response.text();
+    }
+    
+    searchBody (body) {
+        var b = document.createElement("div");
+        b.innerHTML = body;
+        var numResults = b.querySelector('div.numFound');
+        var h2 = numResults.querySelector("h2");
+        var num = h2.innerText.split(" ")[0];
+        var searchPanel = this.shadowRoot.querySelector("paper-search-panel");
+        this.nummatches = num;
+        var headings = b.querySelectorAll('td[class="recName"]');
+        var titles = b.querySelectorAll('td[class="recAnnotation"]');
+        var items = [  ]; //entries;
+        for (var i=0; i<headings.length; i++) {
+            var heading = headings[i];
+            var title = titles[i];
+            var link = heading.querySelector("a");
+            var name = link.childNodes[0].textContent;
+            items.push({ heading: name, type: "Personal", title: title.innerText});
+        }
+        searchPanel.items = items;
+        var vaadinGrid = searchPanel.querySelector("vaadin-grid");
+        vaadinGrid.items = items;
+        searchPanel.loading = true;
+    }
+  }
+  // Register the new element with the browser
+  customElements.define(SRUSearch.is, SRUSearch);
+</script>

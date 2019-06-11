@@ -1,0 +1,35 @@
+{
+  "name": "sru-search",
+  "description": "A material design element for searching using the SRU standard",
+  "license": "Apache-2.0",
+  "main": "sru-search.js",
+  "scripts": {
+    "run": "polymer serve",
+    "proxycat": "node node_modules/local-cors-proxy/bin/lcp.js --proxyUrl http://lx2.loc.gov:210",
+    "proxyDebug": "node --inspect-brk node_modules/local-cors-proxy/bin/lcp.js --proxyUrl http://lx2.loc.gov:210"
+  },
+  "dependencies": {
+    "@polymer/iron-ajax": "^3.0.1",
+    "@polymer/iron-flex-layout": "^3.0.1",
+    "@polymer/iron-icon": "^3.0.1",
+    "@polymer/iron-icons": "^3.0.1",
+    "@polymer/iron-input": "^3.0.1",
+    "@polymer/iron-list": "^3.0.1",
+    "@polymer/paper-badge": "^3.0.1",
+    "@polymer/paper-button": "^3.0.1",
+    "@polymer/paper-checkbox": "^3.1.0",
+    "@polymer/paper-dialog": "^3.0.1",
+    "@polymer/paper-dialog-scrollable": "^3.0.1",
+    "@polymer/paper-icon-button": "^3.0.1",
+    "@polymer/paper-item": "^3.0.1",
+    "@polymer/paper-styles": "^3.0.1",
+    "@polymer/polymer": "^3.0.0",
+    "lcp": "^1.1.0",
+    "local-cors-proxy": "^1.0.2"
+  },
+  "devDependencies": {
+    "@polymer/iron-demo-helpers": "^3.0.0-pre.19",
+    "@webcomponents/webcomponentsjs": "^2.0.0",
+    "wct-browser-legacy": "^1.0.0"
+  }
+}
