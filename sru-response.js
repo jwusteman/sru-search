@@ -14,20 +14,21 @@ import {IronA11yKeysBehavior} from '@polymer/iron-a11y-keys-behavior/iron-a11y-k
  * @polymer
  * @demo demo/index.html
  */
-class SruResults extends PolymerElement {
+class SruRecords extends PolymerElement {
     static get template() {
     return html`
       <style>
         :host {
           display: block;
+          height: 80vh;
         }
       </style>
       <slot></slot>
-        `;
+      `;
     }
 };
-window.customElements.define('sru-results', SruResults);
-
+window.customElements.define('sru-records', SruRecords);
+    
 class SruRecord extends PolymerElement {
     static get template() {
     return html`
