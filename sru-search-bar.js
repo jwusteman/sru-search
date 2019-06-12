@@ -37,6 +37,7 @@ class SruSearchBar extends  mixinBehaviors([IronA11yKeysBehavior], PolymerElemen
                 <input  is="iron-input"  id="sruSearchInput" on-input="_search" placeholder="[[placeholder]]" value="{{value::input}}"></input>
             </iron-input>
             <iron-icon icon="[[icon]]" class="icon"></iron-icon>
+            <div class="logo"><slot name="logo"></slot></div>
         </div>
     `;
   }

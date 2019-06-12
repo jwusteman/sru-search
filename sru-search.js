@@ -41,24 +41,25 @@ class SruSearch extends  mixinBehaviors([IronA11yKeysBehavior], PolymerElement) 
           height: 75vh;
         }
       </style>
-        <div>
-        <sru-search-bar icon="[[icon]]" query="{{query}}" placeholder="[[placeholder]]" id="sruSearchBar" >
+      <div>
+        <sru-search-bar icon="[[icon]]" query="{{query}}" placeholder="[[placeholder]]" id="sruSearchBar"><div slot="logo" class="logo"><slot name="logo"></div></span>
         </sru-search-bar>
         <paper-dialog id="searchResults">
-            <sru-search-bar icon="[[icon]]" query="{{query}}" placeholder="[[placeholder]]" id="sruSearchBar" >
-            <iron-ajax
-                auto id="sruSearchFetch"
-                url='http://localhost:8010/proxy/HLAS?operation=searchRetrieve&version=1.1&query=all "{{query}}"&recordSchema=dc&maximumRecords=15'
-                handle-as="document"
-                on-response="handleResponse"
-                debounce-duration="300">
-            </iron-ajax>
+            <sru-search-bar icon="[[icon]]" query="{{query}}" placeholder="[[placeholder]]" id="sruSearchBar" autofocus>
+                <iron-ajax
+                    auto id="sruSearchFetch"
+                    url='http://localhost:8010/proxy/HLAS?operation=searchRetrieve&version=1.1&query=all "{{query}}"&recordSchema=dc&maximumRecords={{maxRecords}}'
+                    handle-as="document"
+                    on-response="handleResponse"
+                    debounce-duration="300">
+                </iron-ajax>
+                <div slot="logo" class="logo"><slot name="logo"></div>
             </sru-search-bar>
             <h2>Search Results</h2>
-            <paper-dialog-scrollable id="searchResultsPanel">
+            <paper-dialog-scrollable id="searchResultsPanel"><div style="height: 80vh; width: 90vw"></div>
             </paper-dialog-scrollable>
         </paper-dialog>
-        </div>
+      </div>
     `;
   }
   static get properties() {
@@ -68,8 +69,7 @@ class SruSearch extends  mixinBehaviors([IronA11yKeysBehavior], PolymerElement) 
 	 */
 	query: {
 		type: String,
-		notify: true,
-		value: 'James'
+		notify: true
 	},
 	/**
 	 * Icon shown in the search background
@@ -85,6 +85,10 @@ class SruSearch extends  mixinBehaviors([IronA11yKeysBehavior], PolymerElement) 
             type: String,
             value: 'Search'
 	},
+        maxRecords: {
+            type: Number,
+            value: 15                
+        },
         /**
 	 * Number of filters the user has selected (shown in the badge) (optional)
 	 */
@@ -116,9 +120,7 @@ class SruSearch extends  mixinBehaviors([IronA11yKeysBehavior], PolymerElement) 
     ready(){
         super.ready();
         this.addEventListener('search-query-ready', this._search.bind(this));
-        // Output the custom element's HTML tag to the browser console.
-        // Open your browser's developer tools to view the output.
-        console.log(this.tagName);
+        this.$.sruSearchBar.innerHTML = this.innerHTML;
         this.focus();
     }
     
