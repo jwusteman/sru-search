@@ -36,7 +36,9 @@
     "@webcomponents/webcomponentsjs": "^2.0.0",
     "growl": ">=1.10.0",
     "lodash": ">=4.17.11",
+    "diff": "4.0.1",
     "debug": ">=2.6.9",
+    "mocha": "6.1.4",
     "wct-browser-legacy": "^1.0.0"
   }
 }

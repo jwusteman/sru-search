@@ -26,6 +26,17 @@ class SruRecords extends PolymerElement {
       <slot></slot>
       `;
     }
+    ready(){
+        super.ready();
+        var tags = { 'dc-creator': 'creator', 'dc-title': 'title' };
+        for (let tag in tags) {
+            var elements = this.querySelectorAll(tag);
+            for (let i=0; i<elements.length; i++) {
+                elements[i].setAttribute("slot", tags[tag]);
+            }
+        }
+        
+    }
 };
 window.customElements.define('sru-records', SruRecords);
     
@@ -78,6 +89,27 @@ class SruRecordschema extends PolymerElement {
 };
 window.customElements.define('sru-recordschema', SruRecordschema);
 
+class DcDc extends PolymerElement {
+    static get template() {
+    return html`
+      <style>
+        :host {
+          display: block;
+        }
+        .creators:before {
+            content: "Authors: "
+        }
+      </style>
+      <slot name="title"></slot>
+      <div class="creators">
+          <slot name="creator"></slot>
+      </div>
+      <slot></slot>
+        `;
+    }
+};
+window.customElements.define('dc-dc', DcDc);
+
 class DcContributor extends PolymerElement {
     static get template() {
     return html`
@@ -99,7 +131,10 @@ class DcCreator extends PolymerElement {
     return html`
       <style>
         :host {
-          display: block;
+          display: inline-block;
+        }
+        :host:after {
+           content: ", "
         }
       </style>
       <slot></slot>
@@ -112,10 +147,12 @@ class DcDate extends PolymerElement {
     static get template() {
     return html`
       <style>
+    :host:before {
+        content: "Publication Date: ";
+    }        
+
         :host {
           display: block;
-        }
-        .dc-date {
         }
       </style>
       <slot></slot>
@@ -222,10 +259,13 @@ class DcLanguage extends PolymerElement {
     static get template() {
     return html`
       <style>
-        :host {
+    :host:before {
+        content: "Language: ";
+    }        
+    :host {
             display: block;
-            font-weight: 600;
-            font-size: 1.3em;
+            font-weight: 300;
+            font-size: 1em;
         }
       </style>
       <slot></slot>
@@ -238,10 +278,14 @@ class DcPublisher extends PolymerElement {
     static get template() {
     return html`
       <style>
+    :host:before {
+        content: "Publisher: ";
+    }        
+
         :host {
             display: block;
-            font-weight: 600;
-            font-size: 1.3em;
+            font-weight: 400;
+            font-size: 1em;
         }
       </style>
       <slot></slot>
@@ -270,10 +314,13 @@ class DcType extends PolymerElement {
     static get template() {
     return html`
       <style>
-        :host {
-            display: block;
-            font-weight: 600;
-            font-size: 1.3em;
+    :host:before {
+        content: "Type: ";
+    }        
+    :host {
+        display: block;
+        font-weight: 300;
+        font-size: 1em;
         }
       </style>
       <slot></slot>
