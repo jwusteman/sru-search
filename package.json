@@ -38,7 +38,7 @@
     "lodash": ">=4.17.13",
     "diff": "4.0.1",
     "debug": ">=2.6.9",
-    "mocha": "6.1.4",
+    "mocha": "10.2.0",
     "wct-browser-legacy": "^1.0.0"
   }
 }
